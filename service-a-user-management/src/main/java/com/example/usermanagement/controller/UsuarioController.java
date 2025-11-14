@@ -18,11 +18,14 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarios);
     }
 
-    @PostMapping
-    public ResponseEntity<String> createUsuario(@RequestBody String usuario) {
-        usuarios.add(usuario);
-        return ResponseEntity.ok("Usuario creado: " + usuario);
-    }
+    @PostMapping 
+    public ResponseEntity<String> createUsuario(@RequestBody String usuario) { 
+        if (usuario == null || usuario.trim().isEmpty()) { 
+            return ResponseEntity.badRequest().body("El nombre de usuario no puede estar vacío"); 
+        } 
+        usuarios.add(usuario.trim()); 
+        return ResponseEntity.ok("Usuario creado exitosamente: " + usuario); 
+    } 
 
     @PutMapping("/{index}")
     public ResponseEntity<String> updateUsuario(@PathVariable int index, @RequestBody String usuario) {
