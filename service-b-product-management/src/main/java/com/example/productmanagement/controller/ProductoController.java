@@ -1,45 +1,51 @@
-package com.example.productmanagement.controller;
+package com.example.productmanagement.controller; 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+ 
 
-import java.util.List;
+import org.springframework.http.ResponseEntity; 
 
-@RestController
-@RequestMapping("/productos")
-public class ProductoController {
+import org.springframework.web.bind.annotation.*; 
 
-    @Autowired
-    private ProductoService productoService;
+import java.util.HashMap; 
 
-    @GetMapping
-    public ResponseEntity<List<Producto>> getAllProductos() {
-        List<Producto> productos = productoService.getAllProductos();
-        return ResponseEntity.ok(productos);
-    }
+import java.util.Map; 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> getProductoById(@PathVariable Long id) {
-        Producto producto = productoService.getProductoById(id);
-        return ResponseEntity.ok(producto);
-    }
+import java.util.concurrent.ConcurrentHashMap; 
 
-    @PostMapping
-    public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
-        Producto createdProducto = productoService.createProducto(producto);
-        return ResponseEntity.status(201).body(createdProducto);
-    }
+ 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Producto> updateProducto(@PathVariable Long id, @RequestBody Producto producto) {
-        Producto updatedProducto = productoService.updateProducto(id, producto);
-        return ResponseEntity.ok(updatedProducto);
-    }
+@RestController 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
-        productoService.deleteProducto(id);
-        return ResponseEntity.noContent().build();
-    }
-}
+@RequestMapping("/productos") 
+
+public class ProductoController { 
+
+     
+
+    private final Map<String, String> productInventory = new ConcurrentHashMap<>(); 
+
+    @GetMapping 
+
+    public ResponseEntity<Map<String, String>> getAllProducts() { 
+
+        return ResponseEntity.ok(productInventory); 
+
+    } 
+
+ 
+
+    @PostMapping 
+
+    public ResponseEntity<String> addProduct(@RequestBody Map<String, String> request) { 
+
+        String productName = request.get("nombre"); 
+
+        String productPrice = request.get("precio"); 
+
+        productInventory.put(productName, productPrice); 
+
+        return ResponseEntity.ok("Producto agregado: " + productName); 
+
+    } 
+
+} 
